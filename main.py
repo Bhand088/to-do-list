@@ -1,71 +1,62 @@
+# simple todo list
 
-TASKS_FILE = "tasks.txt"
+tasks_file = "tasks.txt"
 
-def load_tasks():
+def read_tasks():
     try:
-        with open(TASKS_FILE, "r") as file:
-            return [line.strip() for line in file.readlines()]
-    except FileNotFoundError:
-        return []
+        with open(tasks_file, "r") as f:
+            lines = f.readlines()
+            tasks = [line.strip() for line in lines]
+    except:
+        tasks = []
+    return tasks
 
-def save_tasks(tasks):
-    with open(TASKS_FILE, "w") as file:
-        for task in tasks:
-            file.write(task + "\n")
+def write_tasks(tasks):
+    with open(tasks_file, "w") as f:
+        for t in tasks:
+            f.write(t + "\n")
 
-def show_tasks(tasks):
-    if not tasks:
-        print("📭 No tasks found.\n")
-    else:
-        print("\n📋 Your To-Do List:")
-        for i, task in enumerate(tasks, start=1):
-            print(f"{i}. {task}")
-        print()
+# main loop
+print("Todo List")
+tasks = read_tasks()
 
-def add_task(tasks):
-    task = input("Enter a new task: ").strip()
-    if task:
-        tasks.append(task)
-        save_tasks(tasks)
-        print("✅ Task added!\n")
-    else:
-        print("⚠️ Empty task not added.\n")
+while True:
+    print("\n1. View")
+    print("2. Add")
+    print("3. Done")
+    print("4. Exit")
 
-def complete_task(tasks):
-    show_tasks(tasks)
-    if tasks:
-        try:
-            index = int(input("Enter task number to mark as done: "))
-            if 1 <= index <= len(tasks):
-                removed = tasks.pop(index - 1)
-                save_tasks(tasks)
-                print(f"✅ Completed & removed: '{removed}'\n")
-            else:
-                print("❌ Invalid number.\n")
-        except ValueError:
-            print("❌ Please enter a valid number.\n")
+    choice = input("Choose: ")
 
-def main():
-    tasks = load_tasks()
-    while True:
-        print("1. View Tasks")
-        print("2. Add Task")
-        print("3. Complete Task")
-        print("4. Exit")
-
-        choice = input("Choose an option (1-4): ")
-
-        if choice == "1":
-            show_tasks(tasks)
-        elif choice == "2":
-            add_task(tasks)
-        elif choice == "3":
-            complete_task(tasks)
-        elif choice == "4":
-            print("👋 Goodbye!")
-            break
+    if choice == "1":
+        if not tasks:
+            print("No tasks.")
         else:
-            print("❌ Invalid choice. Try again.\n")
-
-if __name__ == "__main__":
-    main()
+            for i in range(len(tasks)):
+                print(i+1, "-", tasks[i])
+    elif choice == "2":
+        new_task = input("Task: ").strip()
+        if new_task:
+            tasks.append(new_task)
+            write_tasks(tasks)
+            print("Added.")
+        else:
+            print("Empty task not added.")
+    elif choice == "3":
+        for i in range(len(tasks)):
+            print(i+1, "-", tasks[i])
+        try:
+            n = int(input("Task number to remove: "))
+            if 1 <= n <= len(tasks):
+                removed = tasks.pop(n-1)
+                write_tasks(tasks)
+                print("Removed:", removed)
+            else:
+                print("Invalid number.")
+        except:
+            print("Enter a valid number.")
+    elif choice == "4":
+        print("Bye.")
+        break
+    else:
+        print("Wrong option. ")
