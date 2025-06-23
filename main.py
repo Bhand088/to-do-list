@@ -59,4 +59,4 @@ while True:
         print("Bye.")
         break
     else:
-        print("Wrong option. ")
+        print("Wrong option.")
